@@ -18,3 +18,22 @@ test ebx, ebx
 jz not_supported
 
 ```
+
+```C++
+#include <windows.h>
+
+BOOL is_cet_supported() {
+  OSVERSIONINFOEXW osvi = { sizeof(osvi), 0, 0, 0, 0, {0}, 0, 0 };
+  DWORDLONG mask = 0;
+  VER_SET_CONDITION(mask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+  VER_SET_CONDITION(mask, VER_MINORVERSION, VER_GREATER_EQUAL);
+  VER_SET_CONDITION(mask, VER_BUILDNUMBER, VER_GREATER_EQUAL);
+  VER_SET_CONDITION(mask, VER_PLATFORMID, VER_EQUAL);
+  osvi.dwMajorVersion = 10;
+  osvi.dwMinorVersion = 0;
+  osvi.dwBuildNumber = 17763;
+  osvi.dwPlatformId = VER_PLATFORM_WIN32_NT;
+  return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_BUILDNUMBER | VER_PLATFORMID, mask);
+}
+
+```
